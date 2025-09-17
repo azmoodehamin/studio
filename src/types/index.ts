@@ -29,3 +29,31 @@ export type ProvisionPlan = {
   versionPins: { name: string; version: string }[];
   hardeningLevel: 'strict' | 'moderate';
 };
+
+
+// AI Assistant Types
+
+export type Finding = {
+  id: string;
+  type: 'misconfig' | 'policy' | 'perf' | 'security';
+  severity: 'low' | 'medium' | 'high';
+  evidence: string;
+  requires_check: boolean;
+};
+
+export type Fix = {
+  id: string;
+  title: string;
+  bash: string;
+  powershell: string;
+  revert: string;
+  impact: 'low' | 'medium' | 'high';
+  references: string[];
+};
+
+export type HardeningTask = {
+  id: string;
+  title: string;
+  bash: string;
+  impact: 'low' | 'medium' | 'high';
+}

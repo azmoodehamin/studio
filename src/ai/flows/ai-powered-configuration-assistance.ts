@@ -2,10 +2,7 @@
 
 /**
  * @fileOverview An AI-powered configuration assistance tool for analyzing server logs and configurations.
- *
- * - analyzeServerConfig - A function that analyzes server configurations and suggests hardening settings and troubleshooting.
- * - AnalyzeServerConfigInput - The input type for the analyzeServerConfig function.
- * - AnalyzeServerConfigOutput - The return type for the analyzeServerConfig function.
+ * This file is being replaced by analyze-flow.ts, explain-flow.ts, and plan-flow.ts.
  */
 
 import {ai} from '@/ai/genkit';
