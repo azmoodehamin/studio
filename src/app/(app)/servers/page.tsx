@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Search, MoreHorizontal, FileText, RotateCw, ArrowUpCircle } from "lucide-react";
 import type { Server } from "@/types";
+import { cn } from "@/lib/utils";
 
 const servers: Server[] = [
   { id: 'srv-1', hostname: 'edge-us-east-1', region: '🇺🇸 US East', role: 'edge', status: 'Ready', engines: ['WireGuard 1.0.2'], public_ip: '192.0.2.1', os: 'Ubuntu 22.04', arch: 'x86_64' },
