@@ -23,7 +23,9 @@ import {
 } from '@/components/ui/form';
 import { analyzeAction, explainAction } from './actions';
 import { Loader2, AlertTriangle, ShieldCheck, Wrench, Info, Copy, HelpCircle } from 'lucide-react';
-import type { AnalyzeOutput, ExplainOutput } from '@/ai/flows/analyze-flow';
+import type { AnalyzeOutput, Fix, Finding } from '@/ai/flows/analyze-flow';
+import type { ExplainOutput } from '@/ai/flows/explain-flow';
+
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -68,7 +70,14 @@ const impactColor = {
 export function AssistantForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [analysisResult, setAnalysisResult] = useState<AnalyzeOutput | null>(null);
+  
+  // State for streaming results
+  const [summary, setSummary] = useState<string | null>(null);
+  const [findings, setFindings] = useState<Finding[]>([]);
+  const [fixes, setFixes] = useState<Fix[]>([]);
+  const [confidence, setConfidence] = useState<string | null>(null);
+
+
   const { toast } = useToast();
 
   const [isExplainLoading, setIsExplainLoading] = useState(false);
@@ -85,11 +94,18 @@ export function AssistantForm() {
       role: 'edge',
     },
   });
+  
+  const resetAnalysisState = () => {
+    setSummary(null);
+    setFindings([]);
+    setFixes([]);
+    setConfidence(null);
+    setError(null);
+  }
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
-    setError(null);
-    setAnalysisResult(null);
+    resetAnalysisState();
 
     const result = await analyzeAction({
       serverLogs: data.serverLogs,
@@ -104,7 +120,12 @@ export function AssistantForm() {
     if (result.error) {
       setError(result.error);
     } else if (result.data) {
-      setAnalysisResult(result.data);
+      // This simulates a stream for now. In a real stream, we would
+      // append items as they arrive.
+      setSummary(result.data.summary);
+      setFindings(result.data.findings || []);
+      setFixes(result.data.fixes || []);
+      setConfidence(result.data.confidence);
     }
 
     setIsLoading(false);
@@ -140,6 +161,8 @@ export function AssistantForm() {
     setIsExplainLoading(false);
   };
 
+
+  const hasResults = summary || findings.length > 0 || fixes.length > 0;
 
   return (
     <div className="space-y-8">
@@ -210,16 +233,18 @@ export function AssistantForm() {
         </Card>
       )}
 
-      {analysisResult && (
+      {hasResults && (
         <div className="space-y-8">
-          <Card className="bg-card/50 backdrop-blur-sm">
-             <CardHeader>
-                <CardTitle>Analysis Summary</CardTitle>
-                <CardDescription>{analysisResult.summary}</CardDescription>
-            </CardHeader>
-          </Card>
+          {summary && (
+            <Card className="bg-card/50 backdrop-blur-sm">
+               <CardHeader>
+                  <CardTitle>Analysis Summary</CardTitle>
+                  <CardDescription>{summary}</CardDescription>
+              </CardHeader>
+            </Card>
+          )}
 
-          {analysisResult.findings && analysisResult.findings.length > 0 && (
+          {findings.length > 0 && (
             <Card className="bg-card/50 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle>Findings</CardTitle>
@@ -228,7 +253,7 @@ export function AssistantForm() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {analysisResult.findings.map(finding => (
+                {findings.map(finding => (
                     <div key={finding.id} className="flex items-start gap-4 rounded-md border p-4">
                         <SeverityIcon severity={finding.severity} />
                         <div className="flex-1">
@@ -249,7 +274,7 @@ export function AssistantForm() {
             </Card>
           )}
 
-          {analysisResult.fixes && analysisResult.fixes.length > 0 && (
+          {fixes.length > 0 && (
             <Card className="bg-card/50 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle>Suggested Fixes</CardTitle>
@@ -258,7 +283,7 @@ export function AssistantForm() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {analysisResult.fixes.map(fix => (
+                {fixes.map(fix => (
                     <div key={fix.id} className="rounded-md border p-4">
                        <div className="flex items-start justify-between gap-4">
                             <div className="flex-1">

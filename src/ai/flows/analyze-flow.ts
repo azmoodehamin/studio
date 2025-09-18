@@ -53,7 +53,7 @@ export const AnalyzeOutputSchema = z.object({
 });
 export type AnalyzeOutput = z.infer<typeof AnalyzeOutputSchema>;
 
-// Exporting these types for use in explain-flow
+// Exporting these types for use in explain-flow and the client
 export type Finding = z.infer<typeof FindingSchema>;
 export type Fix = z.infer<typeof FixSchema>;
 
@@ -97,7 +97,7 @@ const analyzeFlow = ai.defineFlow(
   async (input) => {
     // Note: The userId would typically come from the authenticated session.
     const fakeUserId = 'user_placeholder_123';
-    const sessionId = await createAiSession(fakeUserId, input.goal, input.context, 'gemini-1.5-flash');
+    const sessionId = await createAiSession(fakeUserId, input.goal || 'general analysis', input.context, 'gemini-1.5-flash');
 
     await saveSessionUserInput(sessionId, input);
 
