@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -31,7 +32,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { planAction } from './actions';
 import { Loader2, Copy, ShieldCheck } from 'lucide-react';
-import type { PlanOutput } from '@/ai/flows/plan-flow';
+import type { PlanOutput } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';

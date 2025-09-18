@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -23,8 +24,7 @@ import {
 } from '@/components/ui/form';
 import { analyzeAction, explainAction } from './actions';
 import { Loader2, AlertTriangle, ShieldCheck, Wrench, Info, Copy, HelpCircle } from 'lucide-react';
-import type { ExplainOutput } from '@/ai/flows/explain-flow';
-import type { Fix, Finding } from '@/types';
+import type { ExplainOutput, Fix, Finding } from '@/types';
 
 
 import { Badge } from '@/components/ui/badge';

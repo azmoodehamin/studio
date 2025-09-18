@@ -1,37 +1,14 @@
+
 'use server';
 
 /**
  * @fileOverview AI flow to explain a specific finding or suggested command.
  *
  * - explain - A function that handles the explanation process.
- * - ExplainInput - The input type for the explain function.
- * - ExplainOutput - The return type for the explain function.
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
-import type { Finding, Fix } from '@/types';
-
-export const ExplainInputSchema = z.object({
-  findingId: z.string().describe('The ID of the finding to explain, e.g., "F-ACME-HTTP01".'),
-  context: z.object({
-    os: z.string().optional().describe('Operating System, e.g., "Ubuntu 22.04".'),
-    role: z.string().optional().describe('Server role, e.g., "edge".'),
-  }),
-});
-export type ExplainInput = z.infer<typeof ExplainInputSchema>;
-
-export const ExplainOutputSchema = z.object({
-  findingId: z.string(),
-  explanation: z.string().describe("A detailed explanation of the finding, e.g., \"HTTP-01 requires inbound TCP/80 from Let's Encrypt…\""),
-  risks: z.array(z.string()).describe('Potential risks associated with the finding or its fix.'),
-  alternatives: z.array(z.string()).describe('Alternative solutions or approaches.'),
-  commands: z.object({
-    bash: z.array(z.string()).optional().describe('Relevant bash commands.'),
-    powershell: z.array(z.string()).optional().describe('Relevant PowerShell commands.'),
-  }),
-});
-export type ExplainOutput = z.infer<typeof ExplainOutputSchema>;
+import { ExplainInputSchema, ExplainOutputSchema, type ExplainInput, type ExplainOutput } from '@/types';
 
 
 export async function explain(input: ExplainInput): Promise<ExplainOutput> {

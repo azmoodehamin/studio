@@ -1,40 +1,15 @@
+
 'use server';
 /**
  * @fileOverview AI flow to generate a hardening checklist based on a desired security level and server context.
  *
  * - plan - A function that handles the plan generation process.
- * - PlanInput - The input type for the plan function.
- * - PlanOutput - The return type for the plan function.
  */
 
 import { ai } from '@/ai/genkit';
 import { googleAI } from '@genkit-ai/googleai';
-import { z } from 'genkit';
-import type { HardeningTask } from '@/types';
+import { PlanInputSchema, PlanOutputSchema, type PlanInput, type PlanOutput } from '@/types';
 import { createAiSession, savePlanResult, saveSessionUserInput } from '@/services/ai-sessions';
-
-
-export const PlanInputSchema = z.object({
-  level: z.enum(['moderate', 'strict']).describe('The desired hardening level.'),
-  context: z.object({
-    os: z.string().describe('Operating System, e.g., "Ubuntu 22.04".'),
-    role: z.string().describe('Server role, e.g., "edge".'),
-    features: z.array(z.string()).describe('A list of features enabled on the server, e.g., ["wireguard"].'),
-  }),
-});
-export type PlanInput = z.infer<typeof PlanInputSchema>;
-
-export const PlanOutputSchema = z.object({
-  planId: z.string().describe('A unique identifier for the generated plan, e.g., "hp_3a7b…"'),
-  tasks: z.array(z.object({
-    id: z.string().describe('A unique identifier for the task, e.g., "H-SSH-KeyOnly".'),
-    title: z.string().describe('A short, descriptive title for the task, e.g., "SSH key-only".'),
-    bash: z.string().describe('The bash command to perform the task.'),
-    powershell: z.string().describe('The PowerShell command to apply the fix.'),
-    impact: z.enum(['low', 'medium', 'high']).describe('The potential impact of applying the task.'),
-  })).describe('A checklist of hardening tasks with explicit commands.'),
-});
-export type PlanOutput = z.infer<typeof PlanOutputSchema>;
 
 
 export async function plan(input: PlanInput): Promise<PlanOutput> {

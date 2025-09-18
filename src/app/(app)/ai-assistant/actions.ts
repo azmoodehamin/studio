@@ -1,33 +1,18 @@
+
 'use server';
 
 import {
-  analyze,
-  type AnalyzeInput,
-  type AnalyzeOutput,
+  analyze
 } from '@/ai/flows/analyze-flow';
 import {
-  explain,
-  type ExplainInput,
-  type ExplainOutput,
+  explain
 } from '@/ai/flows/explain-flow';
-import { z } from 'zod';
-
-const analyzeFormSchema = z.object({
-  serverLogs: z.string(),
-  serverConfig: z.string(),
-  goal: z.string().optional(),
-  context: z.object({
-    os: z.string().optional(),
-    role: z.string().optional(),
-    region: z.string().optional(),
-    plan: z.string().optional(),
-  }).optional(),
-});
+import { AnalyzeInputSchema, type AnalyzeInput, type AnalyzeOutput, ExplainInputSchema, type ExplainInput, type ExplainOutput } from '@/types';
 
 export async function analyzeAction(
   input: AnalyzeInput
 ): Promise<{ data: AnalyzeOutput | null; error: string | null }> {
-  const parsed = analyzeFormSchema.safeParse(input);
+  const parsed = AnalyzeInputSchema.safeParse(input);
   if (!parsed.success) {
     return { data: null, error: 'Invalid input.' };
   }
@@ -41,19 +26,10 @@ export async function analyzeAction(
   }
 }
 
-
-const explainFormSchema = z.object({
-    findingId: z.string(),
-    context: z.object({
-      os: z.string().optional(),
-      role: z.string().optional(),
-    }),
-});
-
 export async function explainAction(
   input: ExplainInput
 ): Promise<{ data: ExplainOutput | null; error: string | null }> {
-    const parsed = explainFormSchema.safeParse(input);
+    const parsed = ExplainInputSchema.safeParse(input);
     if (!parsed.success) {
         return { data: null, error: 'Invalid input.' };
     }

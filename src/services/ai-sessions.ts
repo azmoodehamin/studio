@@ -1,3 +1,4 @@
+
 /**
  * @fileOverview Service for interacting with the Firestore database
  * to create, and update AI session data.
@@ -12,8 +13,7 @@ import { db } from '@/lib/firebase'; // Assuming you have a firebase config
 import { collection, doc, setDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 */
 
-import type { AnalyzeInput, AnalyzeOutput } from '@/ai/flows/analyze-flow';
-import type { PlanInput, PlanOutput } from '@/ai/flows/plan-flow';
+import type { AnalyzeInput, AnalyzeOutput, PlanInput, PlanOutput } from '@/types';
 
 /**
  * Creates a new AI session document in Firestore.
