@@ -8,6 +8,7 @@
  */
 
 import { ai } from '@/ai/genkit';
+import { googleAI } from '@genkit-ai/googleai';
 import { z } from 'genkit';
 import type { HardeningTask } from '@/types';
 import { createAiSession, savePlanResult, saveSessionUserInput } from '@/services/ai-sessions';
@@ -55,6 +56,7 @@ const planPrompt = ai.definePrompt({
     output: { schema: PlanOutputSchema },
     prompt: `Context: OS {{context.os}}, Role {{context.role}}, Level {{level}}, Features {{context.features}}
 Return a hardened checklist with explicit commands.`,
+    model: googleAI.model('gemini-1.5-pro'),
 });
 
 const planFlow = ai.defineFlow(
