@@ -13,7 +13,10 @@ const recentEnrollments = [
     { token: '******', status: 'Revoked', server: '-', expires: '-' },
 ];
 
-const bootstrapScript = `curl -sfL https://get.vpncommander.dev/enroll.sh | sudo sh -s -- --token YOUR_TOKEN_HERE --fingerprint ABC:123`;
+const bootstrapScript = `curl -sfL https://get.vpncommander.dev/enroll.sh | sudo sh -s -- \\
+--token YOUR_TOKEN_HERE \\
+--fingerprint ABC:123 \\
+--name edge-us-east-1`;
 
 export default function EnrollPage() {
   return (
@@ -25,6 +28,10 @@ export default function EnrollPage() {
                 <CardDescription>Generate a one-time token to securely enroll a new server.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+                 <div className="space-y-2">
+                    <Label htmlFor="serverName">Server Name</Label>
+                    <Input id="serverName" placeholder="e.g., edge-us-east-1" />
+                </div>
                 <div className="space-y-2">
                     <Label htmlFor="region">Region/Role</Label>
                     <Select>
@@ -33,8 +40,11 @@ export default function EnrollPage() {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="us-east-edge">🇺🇸 US East (Edge)</SelectItem>
+                            <SelectItem value="us-west-edge">🇺🇸 US West (Edge)</SelectItem>
                             <SelectItem value="eu-central-relay">🇩🇪 EU Central (Relay)</SelectItem>
+                            <SelectItem value="eu-west-relay">🇬🇧 EU West (Relay)</SelectItem>
                             <SelectItem value="ap-south-gateway">🇮🇳 AP South (Gateway)</SelectItem>
+                            <SelectItem value="ap-southeast-gateway">🇦🇺 AP Southeast (Gateway)</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -71,7 +81,7 @@ export default function EnrollPage() {
                         <Copy className="h-4 w-4"/>
                         <span className="sr-only">Copy script</span>
                     </Button>
-                    <pre className="overflow-auto">{bootstrapScript}</pre>
+                    <pre className="overflow-auto whitespace-pre-wrap">{bootstrapScript}</pre>
                 </div>
             </CardContent>
         </Card>
