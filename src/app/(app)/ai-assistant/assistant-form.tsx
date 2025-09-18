@@ -23,8 +23,9 @@ import {
 } from '@/components/ui/form';
 import { analyzeAction, explainAction } from './actions';
 import { Loader2, AlertTriangle, ShieldCheck, Wrench, Info, Copy, HelpCircle } from 'lucide-react';
-import type { AnalyzeOutput, Fix, Finding } from '@/ai/flows/analyze-flow';
-import type { ExplainOutput } from '@/ai/flows/explain-flow';
+import type { AnalyzeOutput, ExplainOutput } from '@/ai/flows/explain-flow';
+import type { Fix, Finding } from '@/types';
+
 
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';

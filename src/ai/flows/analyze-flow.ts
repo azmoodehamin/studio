@@ -12,6 +12,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 import { createAiSession, saveAnalysisResult, saveSessionUserInput } from '@/services/ai-sessions';
+import type { Finding, Fix } from '@/types';
 
 
 export const AnalyzeInputSchema = z.object({
@@ -52,11 +53,6 @@ export const AnalyzeOutputSchema = z.object({
   confidence: z.enum(['low', 'medium', 'high']).describe('The overall confidence in the analysis.'),
 });
 export type AnalyzeOutput = z.infer<typeof AnalyzeOutputSchema>;
-
-// Exporting these types for use in explain-flow and the client
-export type Finding = z.infer<typeof FindingSchema>;
-export type Fix = z.infer<typeof FixSchema>;
-
 
 export async function analyze(input: AnalyzeInput): Promise<AnalyzeOutput> {
   return analyzeFlow(input);
