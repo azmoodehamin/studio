@@ -53,7 +53,9 @@ const planFlow = ai.defineFlow(
         const latencyMs = Date.now() - startTime;
         
         if (output) {
-          output.planId = `hp_${Math.random().toString(36).substring(2, 8)}`;
+          if (!output.planId) {
+            output.planId = `hp_${Math.random().toString(36).substring(2, 8)}`;
+          }
           await savePlanResult(sessionId, output, latencyMs);
         }
 
