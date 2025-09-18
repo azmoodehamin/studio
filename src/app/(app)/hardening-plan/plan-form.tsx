@@ -35,6 +35,7 @@ import type { PlanOutput } from '@/ai/flows/plan-flow';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { Label } from '@/components/ui/label';
 
 const formSchema = z.object({
   level: z.enum(['moderate', 'strict']),
@@ -252,13 +253,25 @@ export function HardeningPlanForm() {
                        
                         {task.bash && (
                              <div className="mt-4">
-                                <FormLabel className="text-xs">Bash Command</FormLabel>
+                                <Label className="text-xs">Bash Command</Label>
                                 <div className="relative rounded-md bg-muted/50 p-3 font-mono text-xs mt-1">
                                     <Button variant="ghost" size="icon" className="absolute right-1 top-1 h-7 w-7" onClick={() => handleCopy(task.bash, 'Bash command')}>
                                         <Copy className="h-4 w-4"/>
                                         <span className="sr-only">Copy Bash Command</span>
                                     </Button>
                                     <pre className="overflow-auto whitespace-pre-wrap">{task.bash}</pre>
+                                </div>
+                            </div>
+                        )}
+                         {task.powershell && (
+                             <div className="mt-2">
+                                <Label className="text-xs">PowerShell</Label>
+                                <div className="relative rounded-md bg-muted/50 p-3 font-mono text-xs mt-1">
+                                    <Button variant="ghost" size="icon" className="absolute right-1 top-1 h-7 w-7" onClick={() => handleCopy(task.powershell, 'PowerShell command')}>
+                                        <Copy className="h-4 w-4"/>
+                                        <span className="sr-only">Copy PowerShell Command</span>
+                                    </Button>
+                                    <pre className="overflow-auto whitespace-pre-wrap">{task.powershell}</pre>
                                 </div>
                             </div>
                         )}

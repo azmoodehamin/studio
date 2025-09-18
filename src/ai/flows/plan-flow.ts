@@ -29,6 +29,7 @@ export const PlanOutputSchema = z.object({
     id: z.string().describe('A unique identifier for the task, e.g., "H-SSH-KeyOnly".'),
     title: z.string().describe('A short, descriptive title for the task, e.g., "SSH key-only".'),
     bash: z.string().describe('The bash command to perform the task.'),
+    powershell: z.string().describe('The PowerShell command to apply the fix.'),
     impact: z.enum(['low', 'medium', 'high']).describe('The potential impact of applying the task.'),
   })).describe('A checklist of hardening tasks with explicit commands.'),
 });

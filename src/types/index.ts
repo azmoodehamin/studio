@@ -55,5 +55,6 @@ export type HardeningTask = {
   id: string;
   title: string;
   bash: string;
+  powershell: string;
   impact: 'low' | 'medium' | 'high';
 }
