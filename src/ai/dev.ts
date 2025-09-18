@@ -1,6 +1,6 @@
 import { config } from 'dotenv';
 config();
 
-import '@/ai/flows/analyze-flow.ts';
-import '@/ai/flows/explain-flow.ts';
-import '@/ai/flows/plan-flow.ts';
+import '@/ai/flows/analyze-flow';
+import '@/ai/flows/explain-flow';
+import '@/ai/flows/plan-flow';
