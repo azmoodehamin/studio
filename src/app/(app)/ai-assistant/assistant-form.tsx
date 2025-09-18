@@ -21,18 +21,28 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { analyzeAction } from './actions';
-import { Loader2, AlertTriangle, ShieldCheck, Wrench, Info, Copy } from 'lucide-react';
-import type { AnalyzeOutput } from '@/ai/flows/analyze-flow';
+import { analyzeAction, explainAction } from './actions';
+import { Loader2, AlertTriangle, ShieldCheck, Wrench, Info, Copy, HelpCircle } from 'lucide-react';
+import type { AnalyzeOutput, ExplainOutput } from '@/ai/flows/analyze-flow';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { Label } from '@/components/ui/label';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 
 const formSchema = z.object({
   serverLogs: z.string().min(10, 'Server logs must be at least 10 characters.'),
   serverConfig: z
     .string()
     .min(10, 'Server configuration must be at least 10 characters.'),
+  os: z.string().optional(),
+  role: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -61,11 +71,18 @@ export function AssistantForm() {
   const [analysisResult, setAnalysisResult] = useState<AnalyzeOutput | null>(null);
   const { toast } = useToast();
 
+  const [isExplainLoading, setIsExplainLoading] = useState(false);
+  const [explainError, setExplainError] = useState<string | null>(null);
+  const [explainResult, setExplainResult] = useState<ExplainOutput | null>(null);
+  const [isExplainDialogOpen, setIsExplainDialogOpen] = useState(false);
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       serverLogs: '',
       serverConfig: '',
+      os: 'Ubuntu 22.04',
+      role: 'edge',
     },
   });
 
@@ -78,6 +95,10 @@ export function AssistantForm() {
       serverLogs: data.serverLogs,
       serverConfig: data.serverConfig,
       goal: 'general analysis',
+      context: {
+        os: data.os,
+        role: data.role,
+      }
     });
 
     if (result.error) {
@@ -96,6 +117,29 @@ export function AssistantForm() {
         description: "The command has been copied to your clipboard.",
     })
   }
+
+  const handleExplain = async (findingId: string) => {
+    setIsExplainLoading(true);
+    setExplainError(null);
+    setExplainResult(null);
+    setIsExplainDialogOpen(true);
+
+    const result = await explainAction({
+      findingId,
+      context: {
+        os: form.getValues('os'),
+        role: form.getValues('role'),
+      }
+    });
+
+    if (result.error) {
+      setExplainError(result.error);
+    } else if (result.data) {
+      setExplainResult(result.data);
+    }
+    setIsExplainLoading(false);
+  };
+
 
   return (
     <div className="space-y-8">
@@ -192,7 +236,13 @@ export function AssistantForm() {
                            <p className="text-sm text-muted-foreground">{finding.evidence}</p>
                            {finding.requires_check && <Badge variant="outline" className="mt-2">Requires Check</Badge>}
                         </div>
-                        <Badge variant="secondary" className="capitalize">{finding.type}</Badge>
+                        <div className="flex flex-col items-end gap-2">
+                            <Badge variant="secondary" className="capitalize">{finding.type}</Badge>
+                            <Button variant="outline" size="sm" onClick={() => handleExplain(finding.id)}>
+                                <HelpCircle className="mr-2 h-4 w-4" />
+                                Explain
+                            </Button>
+                        </div>
                     </div>
                 ))}
               </CardContent>
@@ -277,6 +327,77 @@ export function AssistantForm() {
 
         </div>
       )}
+
+      <Dialog open={isExplainDialogOpen} onOpenChange={setIsExplainDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>
+              {isExplainLoading ? 'Loading explanation...' : `Explanation for ${explainResult?.findingId}`}
+            </DialogTitle>
+          </DialogHeader>
+          {isExplainLoading && <div className="flex justify-center items-center h-48"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}
+          {explainError && <p className="text-destructive">{explainError}</p>}
+          {explainResult && (
+            <div className="space-y-4 text-sm max-h-[70vh] overflow-y-auto pr-4">
+              <div>
+                <h3 className="font-semibold mb-2">Explanation</h3>
+                <p className="text-muted-foreground">{explainResult.explanation}</p>
+              </div>
+
+              {explainResult.risks.length > 0 && (
+                <div>
+                  <h3 className="font-semibold mb-2">Risks</h3>
+                  <ul className="list-disc list-inside text-muted-foreground space-y-1">
+                    {explainResult.risks.map((risk, i) => <li key={i}>{risk}</li>)}
+                  </ul>
+                </div>
+              )}
+
+              {explainResult.alternatives.length > 0 && (
+                <div>
+                  <h3 className="font-semibold mb-2">Alternatives</h3>
+                   <ul className="list-disc list-inside text-muted-foreground space-y-1">
+                    {explainResult.alternatives.map((alt, i) => <li key={i}>{alt}</li>)}
+                  </ul>
+                </div>
+              )}
+
+              {(explainResult.commands.bash?.length || explainResult.commands.powershell?.length) && (
+                 <div>
+                    <h3 className="font-semibold mb-2">Relevant Commands</h3>
+                     {explainResult.commands.bash && explainResult.commands.bash.length > 0 && (
+                        <div className="mt-2">
+                            <Label className="text-xs">Bash</Label>
+                             {explainResult.commands.bash.map((cmd, i) => (
+                                <div key={i} className="relative rounded-md bg-muted/50 p-3 font-mono text-xs mt-1">
+                                    <Button variant="ghost" size="icon" className="absolute right-1 top-1 h-7 w-7" onClick={() => handleCopy(cmd, 'Bash command')}>
+                                        <Copy className="h-4 w-4"/>
+                                    </Button>
+                                    <pre className="overflow-auto whitespace-pre-wrap">{cmd}</pre>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    {explainResult.commands.powershell && explainResult.commands.powershell.length > 0 && (
+                        <div className="mt-2">
+                            <Label className="text-xs">PowerShell</Label>
+                             {explainResult.commands.powershell.map((cmd, i) => (
+                                <div key={i} className="relative rounded-md bg-muted/50 p-3 font-mono text-xs mt-1">
+                                    <Button variant="ghost" size="icon" className="absolute right-1 top-1 h-7 w-7" onClick={() => handleCopy(cmd, 'PowerShell command')}>
+                                        <Copy className="h-4 w-4"/>
+                                    </Button>
+                                    <pre className="overflow-auto whitespace-pre-wrap">{cmd}</pre>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                 </div>
+              )}
+
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -10,6 +10,8 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
+// We import the types from analyze-flow to avoid duplication
+import type { Finding, Fix } from './analyze-flow';
 
 export const ExplainInputSchema = z.object({
   findingId: z.string().describe('The ID of the finding to explain, e.g., "F-ACME-HTTP01".'),
