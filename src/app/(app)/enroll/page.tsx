@@ -7,11 +7,7 @@ import { Copy, ShieldCheck } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 
-const recentEnrollments = [
-    { token: '******', status: 'Used', server: 'edge-ca-central-1', expires: '-' },
-    { token: '******', status: 'Pending', server: '-', expires: '58m' },
-    { token: '******', status: 'Revoked', server: '-', expires: '-' },
-];
+const recentEnrollments: any[] = [];
 
 const bootstrapScript = `curl -sfL https://get.vpncommander.dev/enroll.sh | sudo sh -s -- \\
 --token YOUR_TOKEN_HERE \\
@@ -104,17 +100,25 @@ export default function EnrollPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {recentEnrollments.map((e, i) => (
-                            <TableRow key={i}>
-                                <TableCell className="font-mono">{e.token}</TableCell>
-                                <TableCell><Badge variant={e.status === 'Pending' ? 'default' : 'secondary'}>{e.status}</Badge></TableCell>
-                                <TableCell>{e.server}</TableCell>
-                                <TableCell>{e.expires}</TableCell>
-                                <TableCell>
-                                    {e.status === 'Pending' && <Button variant="destructive" size="sm">Revoke</Button>}
+                        {recentEnrollments.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={5} className="h-24 text-center">
+                                    No recent enrollments.
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                            recentEnrollments.map((e, i) => (
+                                <TableRow key={i}>
+                                    <TableCell className="font-mono">{e.token}</TableCell>
+                                    <TableCell><Badge variant={e.status === 'Pending' ? 'default' : 'secondary'}>{e.status}</Badge></TableCell>
+                                    <TableCell>{e.server}</TableCell>
+                                    <TableCell>{e.expires}</TableCell>
+                                    <TableCell>
+                                        {e.status === 'Pending' && <Button variant="destructive" size="sm">Revoke</Button>}
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </CardContent>

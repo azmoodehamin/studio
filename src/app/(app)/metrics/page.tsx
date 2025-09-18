@@ -2,20 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Copy } from "lucide-react";
 
-const metrics = [
-    {
-        name: "Provision Runs Total",
-        metric: `provision_runs_total{status="ready"} 1024\nprovision_runs_total{status="failed"} 22`,
-    },
-    {
-        name: "Server Ready Time",
-        metric: `# HELP server_ready_time_seconds Time taken for a server to become ready.\n# TYPE server_ready_time_seconds histogram\nserver_ready_time_seconds_bucket{le="300"} 850\nserver_ready_time_seconds_bucket{le="600"} 980\nserver_ready_time_seconds_bucket{le="+Inf"} 1024`,
-    },
-    {
-        name: "Step Failures Total",
-        metric: `step_failures_total{step="hardening"} 12\nstep_failures_total{step="network"} 8`,
-    }
-]
+const metrics: any[] = []
 
 export default function MetricsPage() {
   return (
@@ -30,6 +17,14 @@ export default function MetricsPage() {
             <Button variant="outline" size="sm"><Copy className="mr-2 h-4 w-4"/>Copy Endpoint</Button>
         </div>
       </div>
+      {metrics.length === 0 ? (
+            <Card>
+                <CardContent className="flex flex-col items-center justify-center h-64">
+                    <h3 className="text-lg font-semibold">No Metrics Available</h3>
+                    <p className="text-muted-foreground">Metrics will be exposed here once the application is running.</p>
+                </CardContent>
+            </Card>
+      ) : (
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {metrics.map((metric) => (
           <Card key={metric.name} className="bg-card/50 backdrop-blur-sm">
@@ -48,6 +43,7 @@ export default function MetricsPage() {
           </Card>
         ))}
       </div>
+      )}
     </div>
   )
 }

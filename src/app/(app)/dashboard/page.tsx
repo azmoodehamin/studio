@@ -7,17 +7,12 @@ import type { ProvisionRun } from "@/types"
 import { cn } from "@/lib/utils"
 
 const kpis = [
-  { title: "Ready Servers", value: "1,254", icon: Server },
-  { title: "Time-to-Ready (p95)", value: "8m 12s", icon: Clock },
-  { title: "Fail Rate", value: "2.1%", icon: AlertTriangle, color: "text-destructive" },
+  { title: "Ready Servers", value: "0", icon: Server },
+  { title: "Time-to-Ready (p95)", value: "0s", icon: Clock },
+  { title: "Fail Rate", value: "0%", icon: AlertTriangle, color: "text-destructive" },
 ]
 
-const recentRuns: ProvisionRun[] = [
-    { id: 'run-1', serverId: 'srv-1', serverHostname: 'edge-us-east-1', plan: 'WireGuard Baseline', status: 'Ready', startedAt: '2m ago', correlationId: 'c-123', steps: [] },
-    { id: 'run-2', serverId: 'srv-2', serverHostname: 'relay-eu-central-1', plan: 'High-Security Relay', status: 'Provisioning', startedAt: '5m ago', correlationId: 'c-456', steps: [] },
-    { id: 'run-3', serverId: 'srv-3', serverHostname: 'gateway-ap-south-1', plan: 'Gateway Standard', status: 'Failed', startedAt: '10m ago', correlationId: 'c-789', steps: [] },
-    { id: 'run-4', serverId: 'srv-4', serverHostname: 'edge-us-west-2', plan: 'WireGuard Baseline', status: 'Ready', startedAt: '15m ago', correlationId: 'c-101', steps: [] },
-]
+const recentRuns: ProvisionRun[] = []
 
 const StatusBadge = ({ status }: { status: ProvisionRun['status'] }) => {
     const statusClasses = {
@@ -66,14 +61,22 @@ export default function DashboardPage() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {recentRuns.map((run) => (
-                        <TableRow key={run.id}>
-                            <TableCell className="font-medium">{run.serverHostname}</TableCell>
-                            <TableCell>{run.plan}</TableCell>
-                            <TableCell><StatusBadge status={run.status} /></TableCell>
-                            <TableCell>{run.startedAt}</TableCell>
+                    {recentRuns.length === 0 ? (
+                        <TableRow>
+                            <TableCell colSpan={4} className="h-24 text-center">
+                                No recent runs.
+                            </TableCell>
                         </TableRow>
-                    ))}
+                    ) : (
+                        recentRuns.map((run) => (
+                            <TableRow key={run.id}>
+                                <TableCell className="font-medium">{run.serverHostname}</TableCell>
+                                <TableCell>{run.plan}</TableCell>
+                                <TableCell><StatusBadge status={run.status} /></TableCell>
+                                <TableCell>{run.startedAt}</TableCell>
+                            </TableRow>
+                        ))
+                    )}
                 </TableBody>
             </Table>
         </CardContent>

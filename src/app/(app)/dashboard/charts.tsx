@@ -4,15 +4,7 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 
-const chartData = [
-  { day: "Monday", runs: 50 },
-  { day: "Tuesday", runs: 75 },
-  { day: "Wednesday", runs: 60 },
-  { day: "Thursday", runs: 90 },
-  { day: "Friday", runs: 120 },
-  { day: "Saturday", runs: 85 },
-  { day: "Sunday", runs: 40 },
-]
+const chartData: any[] = []
 
 const chartConfig = {
   runs: {
@@ -49,13 +41,7 @@ export function ProvisionRunsChart() {
   )
 }
 
-const stepFailuresData = [
-  { step: "Enroll", failures: 5 },
-  { step: "Harden", failures: 2 },
-  { step: "Network", failures: 8 },
-  { step: "VPN", failures: 1 },
-  { step: "TLS", failures: 4 },
-]
+const stepFailuresData: any[] = []
 
 const stepFailuresConfig = {
     failures: {

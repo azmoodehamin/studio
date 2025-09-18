@@ -8,13 +8,7 @@ import { Search, MoreHorizontal, FileText, RotateCw, ArrowUpCircle } from "lucid
 import type { Server } from "@/types";
 import { cn } from "@/lib/utils";
 
-const servers: Server[] = [
-  { id: 'srv-1', hostname: 'edge-us-east-1', region: '🇺🇸 US East', role: 'edge', status: 'Ready', engines: ['WireGuard 1.0.2'], public_ip: '192.0.2.1', os: 'Ubuntu 22.04', arch: 'x86_64' },
-  { id: 'srv-2', hostname: 'relay-eu-central-1', region: '🇩🇪 EU Central', role: 'relay', status: 'Ready', engines: ['WireGuard 1.0.2'], public_ip: '198.51.100.2', os: 'Debian 12', arch: 'x86_64' },
-  { id: 'srv-3', hostname: 'gateway-ap-south-1', region: '🇮🇳 AP South', role: 'gateway', status: 'Failed', engines: [], public_ip: '203.0.113.3', os: 'Rocky 9', arch: 'arm64' },
-  { id: 'srv-4', hostname: 'edge-us-west-2', region: '🇺🇸 US West', role: 'edge', status: 'Provisioning', engines: ['WireGuard 1.0.2'], public_ip: '192.0.2.4', os: 'Ubuntu 22.04', arch: 'x86_64' },
-  { id: 'srv-5', hostname: 'edge-eu-west-1', region: '🇮🇪 EU West', role: 'edge', status: 'Ready', engines: ['WireGuard 1.0.2'], public_ip: '198.51.100.5', os: 'Ubuntu 22.04', arch: 'x86_64' },
-];
+const servers: Server[] = [];
 
 const StatusBadge = ({ status }: { status: Server['status'] }) => {
     const statusClasses = {
@@ -53,30 +47,38 @@ export default function ServersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {servers.map((server) => (
-                <TableRow key={server.id}>
-                  <TableCell className="font-medium">{server.hostname}</TableCell>
-                  <TableCell>{server.region}</TableCell>
-                  <TableCell><Badge variant="secondary" className="capitalize">{server.role}</Badge></TableCell>
-                  <TableCell><StatusBadge status={server.status} /></TableCell>
-                  <TableCell>{server.engines.join(", ")}</TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Server Actions</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem><FileText className="mr-2 h-4 w-4" />Details</DropdownMenuItem>
-                        <DropdownMenuItem><RotateCw className="mr-2 h-4 w-4" />Rotate</DropdownMenuItem>
-                        <DropdownMenuItem><ArrowUpCircle className="mr-2 h-4 w-4" />Upgrade</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
+              {servers.length === 0 ? (
+                <TableRow>
+                    <TableCell colSpan={6} className="h-24 text-center">
+                        No servers found. Enroll a server to get started.
+                    </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                servers.map((server) => (
+                    <TableRow key={server.id}>
+                    <TableCell className="font-medium">{server.hostname}</TableCell>
+                    <TableCell>{server.region}</TableCell>
+                    <TableCell><Badge variant="secondary" className="capitalize">{server.role}</Badge></TableCell>
+                    <TableCell><StatusBadge status={server.status} /></TableCell>
+                    <TableCell>{server.engines.join(", ")}</TableCell>
+                    <TableCell>
+                        <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                            <MoreHorizontal className="h-4 w-4" />
+                            <span className="sr-only">Server Actions</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem><FileText className="mr-2 h-4 w-4" />Details</DropdownMenuItem>
+                            <DropdownMenuItem><RotateCw className="mr-2 h-4 w-4" />Rotate</DropdownMenuItem>
+                            <DropdownMenuItem><ArrowUpCircle className="mr-2 h-4 w-4" />Upgrade</DropdownMenuItem>
+                        </DropdownMenuContent>
+                        </DropdownMenu>
+                    </TableCell>
+                    </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </div>
