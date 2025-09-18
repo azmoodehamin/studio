@@ -47,6 +47,40 @@ export default function SettingsPage() {
 
         <Card className="bg-card/50 backdrop-blur-sm">
             <CardHeader>
+                <CardTitle>AI Provider</CardTitle>
+                <CardDescription>Configure a custom OpenAI-compatible endpoint.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                <div className="grid gap-2">
+                    <Label htmlFor="openai-url">OpenAI Compatible URL</Label>
+                    <Input id="openai-url" placeholder="https://api.example.com/v1" />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="api-token">API Token</Label>
+                    <Input id="api-token" type="password" placeholder="sk-..." />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="model-id">Model ID</Label>
+                    <Input id="model-id" placeholder="gpt-4-turbo" />
+                </div>
+            </CardContent>
+        </Card>
+        
+        <Card className="bg-card/50 backdrop-blur-sm">
+            <CardHeader>
+                <CardTitle>Database</CardTitle>
+                 <CardDescription>Configure the PostgreSQL connection URL.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                <div className="grid gap-2">
+                    <Label htmlFor="postgresql-url">PostgreSQL URL</Label>
+                    <Input id="postgresql-url" type="password" placeholder="postgresql://user:password@host:port/db" />
+                </div>
+            </CardContent>
+        </Card>
+
+        <Card className="bg-card/50 backdrop-blur-sm">
+            <CardHeader>
                 <CardTitle>Defaults</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
