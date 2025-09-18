@@ -94,7 +94,7 @@ export const ExplainOutputSchema = z.object({
   alternatives: z.array(z.string()).describe('Alternative solutions or approaches.'),
   commands: z.object({
     bash: z.array(z.string()).optional().describe('Relevant bash commands.'),
-    powershell: z.array(z_string()).optional().describe('Relevant PowerShell commands.'),
+    powershell: z.array(z.string()).optional().describe('Relevant PowerShell commands.'),
   }),
 });
 export type ExplainOutput = z.infer<typeof ExplainOutputSchema>;
