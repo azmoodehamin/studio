@@ -11,6 +11,8 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
+import { createAiSession, saveAnalysisResult, saveSessionUserInput } from '@/services/ai-sessions';
+
 
 export const AnalyzeInputSchema = z.object({
   serverLogs: z.string().describe('The raw, masked logs from the server.'),
@@ -93,7 +95,20 @@ const analyzeFlow = ai.defineFlow(
     outputSchema: AnalyzeOutputSchema,
   },
   async (input) => {
+    // Note: The userId would typically come from the authenticated session.
+    const fakeUserId = 'user_placeholder_123';
+    const sessionId = await createAiSession(fakeUserId, input.goal, input.context, 'gemini-1.5-flash');
+
+    await saveSessionUserInput(sessionId, input);
+
+    const startTime = Date.now();
     const { output } = await analyzePrompt(input);
+    const latencyMs = Date.now() - startTime;
+
+    if (output) {
+      await saveAnalysisResult(sessionId, output, latencyMs);
+    }
+    
     return output!;
   }
 );

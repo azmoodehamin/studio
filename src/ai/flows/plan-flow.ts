@@ -10,6 +10,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 import type { HardeningTask } from '@/types';
+import { createAiSession, savePlanResult, saveSessionUserInput } from '@/services/ai-sessions';
 
 
 export const PlanInputSchema = z.object({
@@ -62,9 +63,22 @@ const planFlow = ai.defineFlow(
         outputSchema: PlanOutputSchema,
     },
     async (input) => {
+        // Note: The userId would typically come from the authenticated session.
+        const fakeUserId = 'user_placeholder_123';
+        const goal = `Generate ${input.level} hardening plan.`;
+        const sessionId = await createAiSession(fakeUserId, goal, input.context, 'gemini-1.5-pro');
+
+        await saveSessionUserInput(sessionId, input);
+
+        const startTime = Date.now();
         const { output } = await planPrompt(input);
-        // Add a random planId
-        output!.planId = `hp_${Math.random().toString(36).substring(2, 8)}`;
+        const latencyMs = Date.now() - startTime;
+        
+        if (output) {
+          output.planId = `hp_${Math.random().toString(36).substring(2, 8)}`;
+          await savePlanResult(sessionId, output, latencyMs);
+        }
+
         return output!;
     }
 );
