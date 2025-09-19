@@ -10,7 +10,14 @@ import { Search, MoreHorizontal, FileText, RotateCw, ArrowUpCircle, PlusCircle }
 import type { Server } from "@/types";
 import { cn } from "@/lib/utils";
 
-const servers: Server[] = [];
+const servers: Server[] = [
+    { id: "srv-1", hostname: "edge-us-east-1", region: "US East", role: "edge", status: "Ready", engines: ["wireguard", "netdata"], public_ip: "192.0.2.1", os: "Ubuntu 22.04", arch: "amd64" },
+    { id: "srv-2", hostname: "relay-eu-central-1", region: "EU Central", role: "relay", status: "Provisioning", engines: ["wireguard"], public_ip: "198.51.100.2", os: "Debian 12", arch: "amd64" },
+    { id: "srv-3", hostname: "gw-ap-south-1", region: "AP South", role: "gateway", status: "Ready", engines: ["wireguard", "auditd"], public_ip: "203.0.113.3", os: "Rocky 9", arch: "arm64" },
+    { id: "srv-4", hostname: "edge-us-west-1", region: "US West", role: "edge", status: "Failed", engines: ["wireguard", "netdata"], public_ip: "192.0.2.4", os: "Ubuntu 22.04", arch: "amd64" },
+    { id: "srv-5", hostname: "relay-eu-west-1", region: "EU West", role: "relay", status: "Ready", engines: ["wireguard"], public_ip: "198.51.100.5", os: "Debian 12", arch: "amd64" },
+];
+
 
 const StatusBadge = ({ status }: { status: Server['status'] }) => {
     const statusClasses = {
