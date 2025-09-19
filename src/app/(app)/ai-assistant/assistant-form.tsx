@@ -13,6 +13,13 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import {
   Form,
@@ -44,8 +51,8 @@ const formSchema = z.object({
   serverConfig: z
     .string()
     .min(10, 'Server configuration must be at least 10 characters.'),
-  os: z.string().optional(),
-  role: z.string().optional(),
+  os: z.string().min(1, 'OS is required.'),
+  role: z.string().min(1, 'Role is required.'),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -178,6 +185,54 @@ export function AssistantForm() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                 <FormField
+                    control={form.control}
+                    name="os"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Operating System</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select an OS" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="Ubuntu 22.04">Ubuntu 22.04</SelectItem>
+                            <SelectItem value="Debian 12">Debian 12</SelectItem>
+                            <SelectItem value="Rocky 9">Rocky 9</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="role"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Server Role</FormLabel>
+                         <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a role" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="edge">Edge</SelectItem>
+                            <SelectItem value="relay">Relay</SelectItem>
+                            <SelectItem value="gateway">Gateway</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+              </div>
+
               <FormField
                 control={form.control}
                 name="serverLogs"
