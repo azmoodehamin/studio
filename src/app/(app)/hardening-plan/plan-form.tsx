@@ -185,7 +185,7 @@ export function HardeningPlanForm() {
                       <SelectContent>
                         <SelectItem value="edge">Edge</SelectItem>
                         <SelectItem value="relay">Relay</SelectItem>
-                        <SelectItem value="gateway">Gateway</Keterangan</SelectItem>
+                        <SelectItem value="gateway">Gateway</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
