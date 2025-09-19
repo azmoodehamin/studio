@@ -1,3 +1,4 @@
+
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -7,12 +8,18 @@ import type { ProvisionRun } from "@/types"
 import { cn } from "@/lib/utils"
 
 const kpis = [
-  { title: "Ready Servers", value: "0", icon: Server },
-  { title: "Time-to-Ready (p95)", value: "0s", icon: Clock },
-  { title: "Fail Rate", value: "0%", icon: AlertTriangle, color: "text-destructive" },
+  { title: "Ready Servers", value: "48", icon: Server },
+  { title: "Time-to-Ready (p95)", value: "92s", icon: Clock },
+  { title: "Fail Rate", value: "4.2%", icon: AlertTriangle, color: "text-destructive" },
 ]
 
-const recentRuns: ProvisionRun[] = []
+const recentRuns: ProvisionRun[] = [
+    { id: "run-1", serverId: "srv-1", serverHostname: "edge-us-east-1", plan: "Standard Edge", status: "Ready", startedAt: "5m ago", correlationId: "corr-1", steps: [] },
+    { id: "run-2", serverId: "srv-2", serverHostname: "relay-eu-central-1", plan: "Standard Relay", status: "Provisioning", startedAt: "12m ago", correlationId: "corr-2", steps: [] },
+    { id: "run-3", serverId: "srv-3", serverHostname: "gw-ap-south-1", plan: "Gateway Hardened", status: "Failed", startedAt: "30m ago", correlationId: "corr-3", steps: [] },
+    { id: "run-4", serverId: "srv-4", serverHostname: "edge-us-west-1", plan: "Standard Edge", status: "Pending", startedAt: "45m ago", correlationId: "corr-4", steps: [] },
+    { id: "run-5", serverId: "srv-5", serverHostname: "relay-eu-west-1", plan: "Standard Relay", status: "Ready", startedAt: "1h ago", correlationId: "corr-5", steps: [] },
+]
 
 const StatusBadge = ({ status }: { status: ProvisionRun['status'] }) => {
     const statusClasses = {

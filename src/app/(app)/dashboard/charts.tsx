@@ -1,10 +1,19 @@
+
 "use client"
 
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 
-const chartData: any[] = []
+const chartData = [
+  { day: "Monday", runs: 5 },
+  { day: "Tuesday", runs: 8 },
+  { day: "Wednesday", runs: 12 },
+  { day: "Thursday", runs: 7 },
+  { day: "Friday", runs: 15 },
+  { day: "Saturday", runs: 10 },
+  { day: "Sunday", runs: 11 },
+]
 
 const chartConfig = {
   runs: {
@@ -41,7 +50,13 @@ export function ProvisionRunsChart() {
   )
 }
 
-const stepFailuresData: any[] = []
+const stepFailuresData = [
+  { step: 'Install WireGuard', failures: 12 },
+  { step: 'Configure Firewall', failures: 8 },
+  { step: 'Generate Keys', failures: 5 },
+  { step: 'Setup Netdata', failures: 3 },
+  { step: 'ACME Challenge', failures: 2 },
+]
 
 const stepFailuresConfig = {
     failures: {
