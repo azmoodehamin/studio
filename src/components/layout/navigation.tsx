@@ -11,8 +11,8 @@ import {
   PlayCircle,
   BarChart,
   Settings,
-  Sparkles,
-  ListChecks,
+  Bot,
+  ShieldCheck,
 } from 'lucide-react';
 
 const navItems = [
@@ -22,8 +22,8 @@ const navItems = [
   { href: '/plans', label: 'Plans', icon: FileText },
   { href: '/runs', label: 'Runs', icon: PlayCircle },
   { href: '/metrics', label: 'Metrics', icon: BarChart },
-  { href: '/hardening-plan', label: 'Hardening', icon: ListChecks },
-  { href: '/ai-assistant', label: 'AI Assistant', icon: Sparkles },
+  { href: '/hardening-plan', label: 'Hardening', icon: ShieldCheck },
+  { href: '/ai-assistant', label: 'AI Assistant', icon: Bot },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
 
