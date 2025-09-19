@@ -1,10 +1,60 @@
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowDownToLine, RefreshCw, Undo2, CheckCircle2, XCircle, Loader, CircleDashed } from "lucide-react";
 import type { ProvisionRun } from "@/types";
 
-const runs: ProvisionRun[] = [];
+const runs: ProvisionRun[] = [
+    {
+        id: "run-123",
+        serverId: "srv-abc",
+        serverHostname: "edge-us-east-1",
+        plan: "Standard Edge",
+        status: "Provisioning",
+        startedAt: "2m ago",
+        correlationId: "corr-xyz-1",
+        steps: [
+            { name: "Validate Metadata", status: "Completed", log: "Metadata valid." },
+            { name: "Install WireGuard", status: "Completed", log: "wireguard-tools v1.0.20210914 installed." },
+            { name: "Generate Keys", status: "InProgress", log: "Generating private key..." },
+            { name: "Configure Firewall", status: "Pending", log: "" },
+            { name: "Setup Netdata", status: "Pending", log: "" },
+        ],
+    },
+    {
+        id: "run-456",
+        serverId: "srv-def",
+        serverHostname: "relay-eu-central-1",
+        plan: "Standard Relay",
+        status: "Failed",
+        startedAt: "28m ago",
+        correlationId: "corr-xyz-2",
+        steps: [
+            { name: "Validate Metadata", status: "Completed", log: "Metadata valid." },
+            { name: "Install WireGuard", status: "Completed", log: "wireguard-tools v1.0.20210914 installed." },
+            { name: "Generate Keys", status: "Completed", log: "Keys generated and stored." },
+            { name: "Configure Firewall", status: "Failed", log: "Error: Could not acquire lock on /var/run/xtables.lock" },
+            { name: "Setup Netdata", status: "Pending", log: "" },
+        ],
+    },
+    {
+        id: "run-789",
+        serverId: "srv-ghi",
+        serverHostname: "gw-ap-south-1",
+        plan: "Gateway Hardened",
+        status: "Ready",
+        startedAt: "2h ago",
+        correlationId: "corr-xyz-3",
+        steps: [
+            { name: "Validate Metadata", status: "Completed", log: "Metadata valid." },
+            { name: "Apply Hardening", status: "Completed", log: "Strict hardening policy applied." },
+            { name: "Install WireGuard", status: "Completed", log: "wireguard-tools v1.0.20210914 installed." },
+            { name: "Generate Keys", status: "Completed", log: "Keys generated and stored." },
+            { name: "Basic NAT Setup", status: "Completed", log: "NAT configured for eth0." },
+        ],
+    },
+];
 
 const StatusIcon = ({ status }: { status: ProvisionRun['steps'][0]['status'] }) => {
   switch (status) {
