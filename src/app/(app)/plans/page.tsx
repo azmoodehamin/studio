@@ -1,10 +1,43 @@
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Check, Copy, Edit, Archive } from "lucide-react";
 import type { ProvisionPlan } from "@/types";
 
-const plans: ProvisionPlan[] = [];
+const plans: ProvisionPlan[] = [
+    {
+        id: "plan-1",
+        name: "Standard Edge Server",
+        steps: ["Install WireGuard", "Configure Firewall", "Setup Netdata"],
+        osFamily: "Ubuntu 22.04",
+        versionPins: [
+            { name: "wireguard", version: "1.0.20210914" },
+            { name: "netdata", version: "1.36.1" },
+        ],
+        hardeningLevel: "moderate",
+    },
+    {
+        id: "plan-2",
+        name: "Hardened Relay Server",
+        steps: ["Install WireGuard", "Configure Strict Firewall", "Disable Unused Services", "Enable Auditd"],
+        osFamily: "Rocky 9",
+        versionPins: [
+             { name: "wireguard", version: "1.0.20210914" },
+        ],
+        hardeningLevel: "strict",
+    },
+    {
+        id: "plan-3",
+        name: "Basic Gateway",
+        steps: ["Install WireGuard", "Basic NAT Setup"],
+        osFamily: "Debian 12",
+        versionPins: [
+            { name: "wireguard", version: "1.0.20210914" },
+        ],
+        hardeningLevel: "moderate",
+    }
+];
 
 export default function PlansPage() {
   return (
