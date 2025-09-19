@@ -1,21 +1,16 @@
 
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search, MoreHorizontal, FileText, RotateCw, ArrowUpCircle } from "lucide-react";
+import { Search, MoreHorizontal, FileText, RotateCw, ArrowUpCircle, PlusCircle } from "lucide-react";
 import type { Server } from "@/types";
 import { cn } from "@/lib/utils";
 
-const servers: Server[] = [
-    { id: "srv-1", hostname: "edge-us-east-1", region: "us-east-1", role: "edge", status: "Ready", engines: ["wireguard", "netdata"], public_ip: "192.0.2.1", os: "Ubuntu 22.04", arch: "x86_64" },
-    { id: "srv-2", hostname: "relay-eu-central-1", region: "eu-central-1", role: "relay", status: "Ready", engines: ["wireguard"], public_ip: "198.51.100.2", os: "Ubuntu 22.04", arch: "x86_64" },
-    { id: "srv-3", hostname: "gw-ap-south-1", region: "ap-south-1", role: "gateway", status: "Provisioning", engines: ["wireguard", "netdata", "acme"], public_ip: "203.0.113.3", os: "Debian 12", arch: "arm64" },
-    { id: "srv-4", hostname: "edge-us-west-1", region: "us-west-1", role: "edge", status: "Failed", engines: ["wireguard"], public_ip: "192.0.2.4", os: "Rocky 9", arch: "x86_64" },
-    { id: "srv-5", hostname: "relay-eu-west-1", region: "eu-west-1", role: "relay", status: "Ready", engines: ["wireguard", "netdata"], public_ip: "198.51.100.5", os: "Ubuntu 22.04", arch: "x86_64" },
-];
+const servers: Server[] = [];
 
 const StatusBadge = ({ status }: { status: Server['status'] }) => {
     const statusClasses = {
@@ -30,8 +25,18 @@ export default function ServersPage() {
   return (
     <Card className="bg-card/50 backdrop-blur-sm">
       <CardHeader>
-        <CardTitle>Servers</CardTitle>
-        <CardDescription>Manage your VPN servers across all regions.</CardDescription>
+        <div className="flex items-start justify-between gap-4">
+            <div>
+                <CardTitle>Servers</CardTitle>
+                <CardDescription>Manage your VPN servers across all regions.</CardDescription>
+            </div>
+            <Link href="/enroll">
+              <Button>
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  Enroll New Server
+              </Button>
+            </Link>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="flex items-center gap-4 mb-4">
